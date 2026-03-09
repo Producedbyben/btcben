@@ -1,0 +1,36 @@
+# Run ./install_and_setup.sh to create miner.conf with your own answers.
+
+# Built-in miner option (no external download required): internal_py_miner
+# Or use external miners like bfgminer/cgminer.
+MINER_BIN=internal_py_miner
+
+# Algorithm label
+ALGO=sha256d
+
+# Pool endpoint label (for logging in built-in mode)
+POOL_URL=stratum+tcp://solo.ckpool.org:3333
+
+# Payout identity label (wallet address or worker name)
+POOL_USER=YOUR_BITCOIN_WALLET_ADDRESS
+
+# Pool password (often x)
+POOL_PASS=x
+
+# Work mode controls
+USE_GPU=false
+USE_CPU=true
+
+# CPU threads used when USE_CPU=true and built-in mode
+THREADS=2
+
+# GPU intensity (used by external miners)
+GPU_INTENSITY=d
+
+# eco | balanced | performance
+POWER_PROFILE=balanced
+
+# Extra miner-specific arguments (space separated)
+EXTRA_ARGS=""
+
+# Built-in miner difficulty (higher = fewer simulated share hits)
+INTERNAL_DIFFICULTY=24
