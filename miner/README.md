@@ -8,6 +8,7 @@
 4. Double-click **`RUN_ME_WINDOWS.bat`**.
 5. A desktop app opens:
    - Fill your pool + wallet info.
+   - If needed, click **Install/Fix Miner** then **Browse for Miner .exe**.
    - Click **Save Config**.
    - Click **Doctor Check**.
    - Click **Start Mining**.
@@ -17,7 +18,7 @@ If Python is not installed, the batch file shows exactly what to install and whe
 
 ## If you see “file not found” when pressing Start
 
-That usually means `MINER_BIN` is not installed yet.
+That usually means `MINER_BIN` is not installed yet or points to the wrong file.
 
 - Install a miner binary (for example `bfgminer`/`cgminer`).
 - In the app, set **Miner executable** to either:
