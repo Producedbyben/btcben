@@ -1,57 +1,38 @@
-# Bitcoin Lottery Miner (Noob-Friendly GPU Background Tool)
+# Bitcoin Lottery Miner (Noob-Friendly)
 
-This folder gives you a practical **installer + control script + web interface** to run Bitcoin pool mining in the background with your underused GPU/CPU.
+## Windows 10: zero-terminal path (click-only)
 
-> Reality check: finding 1 full BTC in a month on a normal PC is extraordinarily unlikely. Treat this as a lottery-style hobby setup.
+1. Download the repo ZIP from GitHub.
+2. Right-click ZIP -> **Extract All...**
+3. Open extracted folder.
+4. Double-click **`RUN_ME_WINDOWS.bat`**.
+5. A desktop app opens:
+   - Fill your pool + wallet info.
+   - Click **Save Config**.
+   - Click **Doctor Check**.
+   - Click **Start Mining**.
+6. Leave the app open (or minimize). It shows status + live logs.
 
-## What you get
+If Python is not installed, the batch file shows exactly what to install and where.
 
-- `install_and_setup.sh`: guided installer/config wizard for beginners.
-- `start_miner.sh`: production wrapper with `start/stop/status/doctor` commands.
-- `manager_app.py`: local web control center with:
-  - live status, PID, uptime
-  - start/stop/doctor actions
-  - config editor (pool, payout target, GPU/CPU, power profile)
-  - live log tail + hashrate extraction
+## Important reality check
 
-## Quick start (recommended)
+Mining 1 full BTC in one month on a normal home PC is extraordinarily unlikely. Treat this as hobby lottery mining.
 
-```bash
-cd miner
-./install_and_setup.sh
-./start_miner.sh doctor
-python3 manager_app.py
-```
+## Files
 
-Open `http://127.0.0.1:8080`.
+- `RUN_ME_WINDOWS.bat` - double-click launcher for Windows users.
+- `miner/windows_gui.py` - desktop app (Tkinter UI).
+- `miner/miner_control.py` - cross-platform control backend (`start/stop/status/doctor`).
+- `miner/manager_app.py` - optional browser UI.
+- `miner/miner.conf.example` - config template.
 
-## How payout to your wallet works
+## Optional browser UI
 
-- Many pools support **wallet-direct usernames** where `POOL_USER` is your Bitcoin wallet address.
-- In this setup, set `POOL_USER` to your payout wallet address (or pool worker username if your pool requires account workers).
-- Always verify payout method in your pool dashboard.
-
-## Power & control options
-
-You can tune all of these in the web UI or `miner.conf`:
-
-- `USE_GPU` / `USE_CPU`
-- `GPU_INTENSITY`
-- `THREADS`
-- `POWER_PROFILE` (`eco`, `balanced`, `performance`)
-- `EXTRA_ARGS` (pass-through for miner-specific advanced flags)
-
-## CLI controls
+If you like browser UI instead of desktop app:
 
 ```bash
-./start_miner.sh start
-./start_miner.sh status
-./start_miner.sh doctor
-./start_miner.sh stop
+python3 miner/manager_app.py
 ```
 
-## Security tips
-
-- Keep `miner.conf` private (contains pool credentials).
-- Keep web UI bound to localhost (`127.0.0.1`) unless you intentionally expose it.
-- Expect heat/power usage to increase while mining.
+Then visit `http://127.0.0.1:8080`.

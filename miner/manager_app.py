@@ -7,13 +7,14 @@ import re
 import subprocess
 import threading
 import time
+import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent
-SCRIPT_PATH = BASE_DIR / "start_miner.sh"
+SCRIPT_PATH = BASE_DIR / "miner_control.py"
 CONFIG_PATH = BASE_DIR / "miner.conf"
 LOG_PATH = BASE_DIR / "miner.log"
 PID_PATH = BASE_DIR / "miner.pid"
@@ -83,7 +84,7 @@ refreshAll(); setInterval(refreshAll,5000);
 
 def run_miner_command(command: str) -> tuple[int, str]:
     with LOCK:
-        result = subprocess.run([str(SCRIPT_PATH), command], cwd=str(BASE_DIR), capture_output=True, text=True, check=False)
+        result = subprocess.run([sys.executable, str(SCRIPT_PATH), command], cwd=str(BASE_DIR), capture_output=True, text=True, check=False)
     return result.returncode, (result.stdout + result.stderr).strip()
 
 

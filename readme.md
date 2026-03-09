@@ -1,9 +1,11 @@
 # Bitcoin Lottery Miner Control Suite
 
-A noob-friendly local toolkit for background Bitcoin pool mining:
+For Windows beginners, the easiest path is now:
 
-- Guided installer and setup wizard
-- Background process manager
-- Rich local web interface for status, controls, logs, and tuning
+1. Download ZIP from GitHub
+2. Extract ZIP
+3. Double-click `RUN_ME_WINDOWS.bat`
 
-See [`miner/README.md`](miner/README.md) for full usage.
+That opens a desktop installer/control app so you can configure and run mining without terminal commands.
+
+More details: [`miner/README.md`](miner/README.md)
