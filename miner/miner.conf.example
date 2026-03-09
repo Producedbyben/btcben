@@ -1,0 +1,32 @@
+# Run ./install_and_setup.sh to create miner.conf with your own answers.
+
+# Miner binary in PATH (examples: bfgminer, cgminer, cpuminer)
+MINER_BIN=bfgminer
+
+# Algorithm for Bitcoin
+ALGO=sha256d
+
+# Pool endpoint (stratum). Example for wallet-direct style pool:
+POOL_URL=stratum+tcp://solo.ckpool.org:3333
+
+# Pool username. For many pools this can be your BTC wallet address.
+POOL_USER=YOUR_BITCOIN_WALLET_ADDRESS
+
+# Pool password (often x)
+POOL_PASS=x
+
+# Work mode controls
+USE_GPU=true
+USE_CPU=false
+
+# CPU threads used when USE_CPU=true
+THREADS=2
+
+# GPU intensity (miner-dependent; values often d/8-20)
+GPU_INTENSITY=d
+
+# eco | balanced | performance
+POWER_PROFILE=balanced
+
+# Extra miner-specific arguments (space separated)
+EXTRA_ARGS=""
