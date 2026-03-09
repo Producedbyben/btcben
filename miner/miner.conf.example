@@ -1,0 +1,20 @@
+# Copy this file to miner.conf and replace with your mining-pool credentials.
+# Note: consumer CPUs are extremely unlikely to mine 1 BTC in one month.
+
+# The miner executable to run. Example: MINER_BIN=cpuminer
+MINER_BIN=cpuminer
+
+# Stratum URL from your mining pool
+POOL_URL=stratum+tcp://your-pool.example.com:3333
+
+# Worker username from your pool dashboard (often account.worker)
+POOL_USER=yourusername.worker1
+
+# Worker password (often just x)
+POOL_PASS=x
+
+# Number of CPU threads to use
+THREADS=4
+
+# Extra command-line args passed directly to cpuminer (optional)
+EXTRA_ARGS=""
