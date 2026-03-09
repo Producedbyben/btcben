@@ -75,7 +75,7 @@ class App(tk.Tk):
         data["ALGO"] = "sha256d"
         return data
 
-    def save_config(self) -> None:
+    def save_config(self, quiet: bool = False) -> None:
         data = self.config_map()
         lines = []
         order = ["MINER_BIN", "ALGO", "POOL_URL", "POOL_USER", "POOL_PASS", "USE_GPU", "USE_CPU", "THREADS", "GPU_INTENSITY", "POWER_PROFILE", "EXTRA_ARGS"]
@@ -85,7 +85,8 @@ class App(tk.Tk):
                 val = json.dumps(val)
             lines.append(f"{k}={val}")
         CONFIG.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        messagebox.showinfo("Saved", "Configuration saved. You can now click Start Mining.")
+        if not quiet:
+            messagebox.showinfo("Saved", "Configuration saved. You can now click Start Mining.")
 
     def load_config(self) -> None:
         if not CONFIG.exists():
@@ -99,12 +100,15 @@ class App(tk.Tk):
                 self.vars[k].set(v.strip().strip('"'))
 
     def run_cmd(self, command: str) -> None:
-        self.save_config()
+        self.save_config(quiet=True)
 
         def _worker() -> None:
             p = subprocess.run([sys.executable, str(CONTROL), command], cwd=str(BASE), capture_output=True, text=True, check=False)
             out = (p.stdout + p.stderr).strip() or f"{command} completed"
-            self.after(0, lambda: messagebox.showinfo("Miner", out))
+            if p.returncode == 0:
+                self.after(0, lambda: messagebox.showinfo("Miner", out))
+            else:
+                self.after(0, lambda: messagebox.showerror("Miner Error", out))
             self.after(0, self.refresh_status)
 
         threading.Thread(target=_worker, daemon=True).start()

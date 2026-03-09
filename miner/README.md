@@ -15,6 +15,16 @@
 
 If Python is not installed, the batch file shows exactly what to install and where.
 
+## If you see “file not found” when pressing Start
+
+That usually means `MINER_BIN` is not installed yet.
+
+- Install a miner binary (for example `bfgminer`/`cgminer`).
+- In the app, set **Miner executable** to either:
+  - the command name (if it is in PATH), e.g. `bfgminer`
+  - OR full path to exe, e.g. `C:\miners\bfgminer.exe`
+- Click **Doctor Check** again until it says OK, then click **Start Mining**.
+
 ## Important reality check
 
 Mining 1 full BTC in one month on a normal home PC is extraordinarily unlikely. Treat this as hobby lottery mining.

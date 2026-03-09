@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import os
 import shlex
+import shutil
 import signal
 import subprocess
 import sys
@@ -17,7 +18,7 @@ LOG_PATH = BASE_DIR / "miner.log"
 
 def parse_config() -> dict[str, str]:
     if not CONFIG_PATH.exists():
-        raise SystemExit(f"Missing {CONFIG_PATH}. Run installer first.")
+        raise RuntimeError(f"Missing {CONFIG_PATH}. Open the app and click Save Config first.")
 
     data: dict[str, str] = {}
     for raw in CONFIG_PATH.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -25,14 +26,12 @@ def parse_config() -> dict[str, str]:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
-        key = key.strip()
-        value = value.strip().strip('"')
-        data[key] = value
+        data[key.strip()] = value.strip().strip('"')
 
     required = ["MINER_BIN", "POOL_URL", "POOL_USER", "POOL_PASS"]
     missing = [k for k in required if not data.get(k)]
     if missing:
-        raise SystemExit(f"Missing required config keys: {', '.join(missing)}")
+        raise RuntimeError(f"Missing required config keys: {', '.join(missing)}")
 
     data.setdefault("ALGO", "sha256d")
     data.setdefault("USE_GPU", "true")
@@ -42,6 +41,12 @@ def parse_config() -> dict[str, str]:
     data.setdefault("POWER_PROFILE", "balanced")
     data.setdefault("EXTRA_ARGS", "")
     return data
+
+
+def resolve_miner_executable(miner_bin: str) -> str | None:
+    if Path(miner_bin).is_file():
+        return str(Path(miner_bin))
+    return shutil.which(miner_bin)
 
 
 def process_alive(pid: int) -> bool:
@@ -82,8 +87,16 @@ def profile_args(profile: str) -> list[str]:
 
 
 def build_command(cfg: dict[str, str]) -> list[str]:
+    miner_exe = resolve_miner_executable(cfg["MINER_BIN"])
+    if not miner_exe:
+        raise RuntimeError(
+            "Miner executable not found.\n"
+            f"- You set MINER_BIN={cfg['MINER_BIN']}\n"
+            "- Install bfgminer/cgminer OR set MINER_BIN to full path, e.g. C:\\miners\\bfgminer.exe"
+        )
+
     cmd = [
-        cfg["MINER_BIN"],
+        miner_exe,
         "-a",
         cfg["ALGO"],
         "-o",
@@ -154,12 +167,15 @@ def command_status() -> int:
 def command_doctor() -> int:
     cfg = parse_config()
     print("== Miner Doctor ==")
-    miner = cfg["MINER_BIN"]
-    found = subprocess.run(["where" if os.name == "nt" else "which", miner], capture_output=True, text=True, check=False)
-    if found.returncode != 0:
-        print(f"[ERR] MINER_BIN not found in PATH: {miner}")
+    found = resolve_miner_executable(cfg["MINER_BIN"])
+    if not found:
+        print(
+            "[ERR] Miner executable not found.\n"
+            f"- MINER_BIN={cfg['MINER_BIN']}\n"
+            "- Install bfgminer/cgminer or set full path to .exe"
+        )
         return 1
-    print(f"[OK] MINER_BIN found: {miner}")
+    print(f"[OK] MINER_BIN found: {found}")
     print("[OK] Effective command preview:")
     print(" ".join(shlex.quote(p) for p in build_command(cfg)))
     return 0
@@ -169,12 +185,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=["start", "stop", "status", "doctor"])
     args = parser.parse_args()
-    return {
-        "start": command_start,
-        "stop": command_stop,
-        "status": command_status,
-        "doctor": command_doctor,
-    }[args.command]()
+
+    try:
+        return {
+            "start": command_start,
+            "stop": command_stop,
+            "status": command_status,
+            "doctor": command_doctor,
+        }[args.command]()
+    except RuntimeError as exc:
+        print(str(exc))
+        return 1
+    except FileNotFoundError as exc:
+        print(f"Required file/program was not found: {exc}")
+        return 1
 
 
 if __name__ == "__main__":
