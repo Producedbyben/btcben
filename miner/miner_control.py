@@ -40,6 +40,7 @@ def parse_config() -> dict[str, str]:
     data.setdefault("GPU_INTENSITY", "d")
     data.setdefault("POWER_PROFILE", "balanced")
     data.setdefault("EXTRA_ARGS", "")
+    data.setdefault("INTERNAL_DIFFICULTY", "24")
     return data
 
 
@@ -87,12 +88,28 @@ def profile_args(profile: str) -> list[str]:
 
 
 def build_command(cfg: dict[str, str]) -> list[str]:
+    if cfg["MINER_BIN"].strip().lower() == "internal_py_miner":
+        difficulty = cfg.get("INTERNAL_DIFFICULTY", "24")
+        threads = cfg.get("THREADS", "2")
+        return [
+            sys.executable,
+            str(BASE_DIR / "internal_miner.py"),
+            "--pool-url",
+            cfg["POOL_URL"],
+            "--user",
+            cfg["POOL_USER"],
+            "--threads",
+            threads,
+            "--difficulty",
+            difficulty,
+        ]
+
     miner_exe = resolve_miner_executable(cfg["MINER_BIN"])
     if not miner_exe:
         raise RuntimeError(
             "Miner executable not found.\n"
             f"- You set MINER_BIN={cfg['MINER_BIN']}\n"
-            "- Install bfgminer/cgminer OR set MINER_BIN to full path, e.g. C:\\miners\\bfgminer.exe"
+            "- Use built-in option MINER_BIN=internal_py_miner, or install bfgminer/cgminer, or set full path to exe."
         )
 
     cmd = [
@@ -167,12 +184,22 @@ def command_status() -> int:
 def command_doctor() -> int:
     cfg = parse_config()
     print("== Miner Doctor ==")
+    if cfg["MINER_BIN"].strip().lower() == "internal_py_miner":
+        internal = BASE_DIR / "internal_miner.py"
+        if not internal.exists():
+            print(f"[ERR] Missing built-in miner file: {internal}")
+            return 1
+        print(f"[OK] Built-in miner ready: {internal}")
+        print("[OK] Effective command preview:")
+        print(" ".join(shlex.quote(p) for p in build_command(cfg)))
+        return 0
+
     found = resolve_miner_executable(cfg["MINER_BIN"])
     if not found:
         print(
             "[ERR] Miner executable not found.\n"
             f"- MINER_BIN={cfg['MINER_BIN']}\n"
-            "- Install bfgminer/cgminer or set full path to .exe"
+            "- Use internal_py_miner or install bfgminer/cgminer or set full path to .exe"
         )
         return 1
     print(f"[OK] MINER_BIN found: {found}")

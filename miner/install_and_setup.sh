@@ -38,9 +38,9 @@ main() {
   bold "=== Bitcoin Lottery Miner: Guided Setup ==="
   install_hint
 
-  local miner_bin pool_url wallet_or_user pool_pass use_gpu use_cpu threads intensity profile extra
+  local miner_bin pool_url wallet_or_user pool_pass use_gpu use_cpu threads intensity profile extra internal_diff
 
-  miner_bin="$(prompt 'Miner binary to run' 'bfgminer')"
+  miner_bin="$(prompt 'Miner binary to run (internal_py_miner for built-in)' 'internal_py_miner')"
   pool_url="$(prompt 'Pool URL (stratum+tcp://...)' 'stratum+tcp://solo.ckpool.org:3333')"
   wallet_or_user="$(prompt 'Wallet address or pool worker username (payout target)' 'YOUR_BTC_WALLET')"
   pool_pass="$(prompt 'Pool password' 'x')"
@@ -50,6 +50,7 @@ main() {
   intensity="$(prompt 'GPU intensity (d or number, miner-specific)' 'd')"
   profile="$(prompt 'Power profile (eco/balanced/performance)' 'balanced')"
   extra="$(prompt 'Extra args (optional)' '')"
+  internal_diff="$(prompt 'Built-in miner difficulty (higher=harder)' '24')"
 
   cat > "${CONFIG_FILE}" <<CFG
 MINER_BIN=${miner_bin}
@@ -63,6 +64,7 @@ THREADS=${threads}
 GPU_INTENSITY=${intensity}
 POWER_PROFILE=${profile}
 EXTRA_ARGS="${extra}"
+INTERNAL_DIFFICULTY=${internal_diff}
 CFG
 
   chmod 600 "${CONFIG_FILE}" || true

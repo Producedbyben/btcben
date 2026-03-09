@@ -16,7 +16,7 @@ CONFIG = BASE / "miner.conf"
 LOG = BASE / "miner.log"
 
 FIELDS = [
-    ("MINER_BIN", "Miner executable", "bfgminer"),
+    ("MINER_BIN", "Miner executable (use internal_py_miner for built-in)", "internal_py_miner"),
     ("POOL_URL", "Pool URL", "stratum+tcp://solo.ckpool.org:3333"),
     ("POOL_USER", "Wallet address / worker", "YOUR_BTC_WALLET"),
     ("POOL_PASS", "Pool password", "x"),
@@ -26,6 +26,7 @@ FIELDS = [
     ("GPU_INTENSITY", "GPU intensity", "d"),
     ("POWER_PROFILE", "Power profile", "balanced"),
     ("EXTRA_ARGS", "Extra args", ""),
+    ("INTERNAL_DIFFICULTY", "Internal miner difficulty (higher=harder)", "24"),
 ]
 
 
@@ -45,7 +46,7 @@ class App(tk.Tk):
         top.pack(fill=tk.X)
         ttk.Label(
             top,
-            text="Fill setup once -> Doctor Check -> Start Mining. If Chrome blocks downloads, click Install/Fix Miner.",
+            text="Built-in miner included: keep MINER_BIN=internal_py_miner for zero-download mode.",
             font=("Segoe UI", 11, "bold"),
         ).pack(anchor="w")
 
@@ -105,6 +106,7 @@ class App(tk.Tk):
             "GPU_INTENSITY",
             "POWER_PROFILE",
             "EXTRA_ARGS",
+            "INTERNAL_DIFFICULTY",
         ]
         for key in order:
             val = data.get(key, "")
@@ -128,7 +130,7 @@ class App(tk.Tk):
 
     def auto_fill_miner_if_available(self) -> None:
         current = self.vars["MINER_BIN"].get().strip().lower()
-        if current and current not in {"bfgminer", "cgminer", ""}:
+        if current and current not in {"bfgminer", "cgminer", "internal_py_miner", ""}:
             return
         for candidate in self.find_common_miner_locations():
             self.vars["MINER_BIN"].set(str(candidate))
@@ -163,6 +165,7 @@ class App(tk.Tk):
 
     def install_or_fix_miner(self) -> None:
         msg = (
+            "Fastest path: leave MINER_BIN=internal_py_miner to use built-in miner (no download).\n\n"
             "If Chrome blocked your miner download, do this:\n\n"
             "1) Try another source/browser (Edge/Firefox) for bfgminer/cgminer releases\n"
             "2) Unzip the download\n"

@@ -8,4 +8,6 @@ For Windows beginners, the easiest path is now:
 
 That opens a desktop installer/control app so you can configure and run mining without terminal commands.
 
+Default setup now includes a built-in miner program so you can run without downloading third-party miner binaries.
+
 More details: [`miner/README.md`](miner/README.md)

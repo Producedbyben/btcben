@@ -16,11 +16,14 @@
 
 If Python is not installed, the batch file shows exactly what to install and where.
 
+By default this app now uses a built-in mining program (`MINER_BIN=internal_py_miner`) so you can start without downloading bfgminer/cgminer.
+
 ## If you see “file not found” when pressing Start
 
-That usually means `MINER_BIN` is not installed yet or points to the wrong file.
+That usually means you switched to an external miner and `MINER_BIN` is not installed yet or points to the wrong file.
 
-- Install a miner binary (for example `bfgminer`/`cgminer`).
+- Easiest: set `MINER_BIN=internal_py_miner` to use the built-in miner (no external download).
+- Or install an external miner binary (for example `bfgminer`/`cgminer`).
 - In the app, set **Miner executable** to either:
   - the command name (if it is in PATH), e.g. `bfgminer`
   - OR full path to exe, e.g. `C:\miners\bfgminer.exe`
@@ -55,3 +58,12 @@ Then visit `http://127.0.0.1:8080`.
 - Try Edge or Firefox, then unzip the miner package.
 - Click **Browse for Miner .exe** and select `bfgminer.exe` or `cgminer.exe`.
 - Before running, scan the downloaded file with your antivirus or VirusTotal.
+
+
+## Built-in miner mode (no external download)
+
+- Keep `MINER_BIN=internal_py_miner`
+- Adjust `THREADS` and `INTERNAL_DIFFICULTY`
+- Click **Doctor Check** then **Start Mining**
+
+This built-in miner is educational/lottery-style and logs hashrate and simulated shares. It is not full Bitcoin network mining software.

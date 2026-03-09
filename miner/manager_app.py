@@ -34,6 +34,7 @@ CONFIG_KEYS = [
     "GPU_INTENSITY",
     "POWER_PROFILE",
     "EXTRA_ARGS",
+    "INTERNAL_DIFFICULTY",
 ]
 
 HTML = """<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
@@ -65,6 +66,7 @@ label{font-size:12px;color:var(--muted)} input,select{width:100%;background:#0b1
 <div><label>Pool Password</label><input id='POOL_PASS'></div><div><label>Power Profile</label><select id='POWER_PROFILE'><option>eco</option><option>balanced</option><option>performance</option></select></div>
 <div><label>Use GPU</label><select id='USE_GPU'><option>true</option><option>false</option></select></div><div><label>Use CPU</label><select id='USE_CPU'><option>false</option><option>true</option></select></div>
 <div><label>CPU Threads</label><input id='THREADS' type='number' min='1'></div><div><label>GPU Intensity</label><input id='GPU_INTENSITY'></div>
+<div><label>Internal Difficulty</label><input id='INTERNAL_DIFFICULTY' type='number' min='1' max='250'></div><div></div>
 </div><div style='margin-top:10px'><label>Extra Args</label><input id='EXTRA_ARGS'></div>
 <div class='row' style='margin-top:12px'><button class='btn save' onclick='saveConfig()'>Save Config</button><button class='btn' onclick='loadConfig()'>Reload</button></div>
 <div class='small muted' style='margin-top:8px'>Tip: For wallet-direct pools, set POOL_USER to your Bitcoin address so payouts go to your own wallet.</div>
@@ -73,7 +75,7 @@ label{font-size:12px;color:var(--muted)} input,select{width:100%;background:#0b1
 async function api(path,opts={}){const r=await fetch(path,{headers:{'Content-Type':'application/json'},...opts});return await r.json();}
 function setText(id,v){document.getElementById(id).textContent=v;}
 async function loadConfig(){const d=await api('/api/config'); for(const [k,v] of Object.entries(d.config||{})){const el=document.getElementById(k); if(el) el.value=v;}}
-async function saveConfig(){const payload={};['MINER_BIN','ALGO','POOL_URL','POOL_USER','POOL_PASS','USE_GPU','USE_CPU','THREADS','GPU_INTENSITY','POWER_PROFILE','EXTRA_ARGS'].forEach(k=>payload[k]=document.getElementById(k).value); const d=await api('/api/config',{method:'POST',body:JSON.stringify(payload)}); alert(d.message||'Saved'); refreshAll();}
+async function saveConfig(){const payload={};['MINER_BIN','ALGO','POOL_URL','POOL_USER','POOL_PASS','USE_GPU','USE_CPU','THREADS','GPU_INTENSITY','POWER_PROFILE','EXTRA_ARGS','INTERNAL_DIFFICULTY'].forEach(k=>payload[k]=document.getElementById(k).value); const d=await api('/api/config',{method:'POST',body:JSON.stringify(payload)}); alert(d.message||'Saved'); refreshAll();}
 async function refreshStatus(){const d=await api('/api/status'); setText('statusBadge', d.running?'Running':'Stopped'); setText('pidBadge', 'PID: '+(d.pid||'-')); setText('uptimeBadge','Uptime: '+(d.uptime||'-'));}
 async function refreshLogs(){const d=await api('/api/logs'); setText('logs', d.logs||'(no logs yet)'); setText('hashrate',d.hashrate||'n/a'); setText('lastLog',d.last_update||'n/a');}
 async function act(cmd){const d=await api('/api/'+cmd,{method:'POST'}); alert(d.output||d.error||cmd); refreshAll();}
