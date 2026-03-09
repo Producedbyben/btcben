@@ -32,25 +32,38 @@ Edit `miner.conf` and set:
 - `POOL_PASS`
 - `THREADS`
 
-## 3) Start in background
+## 3) Start/stop from CLI
 
 ```bash
 ./start_miner.sh start
-```
-
-Check status:
-
-```bash
 ./start_miner.sh status
-```
-
-Stop it:
-
-```bash
 ./start_miner.sh stop
 ```
 
 Logs are written to `miner/miner.log`.
+
+## 4) Run the local management web app
+
+The app provides a browser UI to start/stop/check status and view recent logs.
+
+```bash
+python3 manager_app.py
+```
+
+Then open:
+
+- `http://127.0.0.1:8080`
+
+Optional environment variables:
+
+- `MINER_UI_HOST` (default `127.0.0.1`)
+- `MINER_UI_PORT` (default `8080`)
+
+Example:
+
+```bash
+MINER_UI_HOST=0.0.0.0 MINER_UI_PORT=8090 python3 manager_app.py
+```
 
 ## Tips
 
