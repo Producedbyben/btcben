@@ -47,3 +47,11 @@ python3 miner/manager_app.py
 ```
 
 Then visit `http://127.0.0.1:8080`.
+
+
+## If Chrome blocks the download
+
+- Click **Install/Fix Miner** in the app to open alternative download/help pages.
+- Try Edge or Firefox, then unzip the miner package.
+- Click **Browse for Miner .exe** and select `bfgminer.exe` or `cgminer.exe`.
+- Before running, scan the downloaded file with your antivirus or VirusTotal.

@@ -45,7 +45,7 @@ class App(tk.Tk):
         top.pack(fill=tk.X)
         ttk.Label(
             top,
-            text="Fill setup once -> Doctor Check -> Start Mining. If miner missing, click Install/Fix Miner.",
+            text="Fill setup once -> Doctor Check -> Start Mining. If Chrome blocks downloads, click Install/Fix Miner.",
             font=("Segoe UI", 11, "bold"),
         ).pack(anchor="w")
 
@@ -163,16 +163,21 @@ class App(tk.Tk):
 
     def install_or_fix_miner(self) -> None:
         msg = (
-            "If Start says miner executable not found, install a miner first.\n\n"
-            "Recommended steps:\n"
-            "1) Open a miner download page\n"
-            "2) Download and unzip bfgminer/cgminer\n"
-            "3) Click 'Browse for Miner .exe' and select bfgminer.exe or cgminer.exe\n"
-            "4) Click Doctor Check then Start Mining\n"
+            "If Chrome blocked your miner download, do this:\n\n"
+            "1) Try another source/browser (Edge/Firefox) for bfgminer/cgminer releases\n"
+            "2) Unzip the download\n"
+            "3) Click 'Browse for Miner .exe' and pick bfgminer.exe/cgminer.exe\n"
+            "4) Click Doctor Check then Start Mining\n\n"
+            "Safety tip: only use known repos, then scan the file with your antivirus or VirusTotal."
         )
         messagebox.showinfo("Install / Fix Miner", msg)
-        if messagebox.askyesno("Open download page?", "Open GitHub search for Windows miner releases now?"):
-            webbrowser.open("https://github.com/search?q=bfgminer+windows+release&type=repositories")
+        if messagebox.askyesno("Open download options?", "Open trusted download/help pages now?"):
+            self.open_download_options()
+
+    def open_download_options(self) -> None:
+        webbrowser.open("https://github.com/luke-jr/bfgminer")
+        webbrowser.open("https://github.com/search?q=cgminer+windows+release&type=repositories")
+        webbrowser.open("https://www.virustotal.com/gui/home/upload")
 
     def run_cmd(self, command: str) -> None:
         self.save_config(quiet=True)
