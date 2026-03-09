@@ -1,20 +1,32 @@
-# Copy this file to miner.conf and replace with your mining-pool credentials.
-# Note: consumer CPUs are extremely unlikely to mine 1 BTC in one month.
+# Run ./install_and_setup.sh to create miner.conf with your own answers.
 
-# The miner executable to run. Example: MINER_BIN=cpuminer
-MINER_BIN=cpuminer
+# Miner binary in PATH (examples: bfgminer, cgminer, cpuminer)
+MINER_BIN=bfgminer
 
-# Stratum URL from your mining pool
-POOL_URL=stratum+tcp://your-pool.example.com:3333
+# Algorithm for Bitcoin
+ALGO=sha256d
 
-# Worker username from your pool dashboard (often account.worker)
-POOL_USER=yourusername.worker1
+# Pool endpoint (stratum). Example for wallet-direct style pool:
+POOL_URL=stratum+tcp://solo.ckpool.org:3333
 
-# Worker password (often just x)
+# Pool username. For many pools this can be your BTC wallet address.
+POOL_USER=YOUR_BITCOIN_WALLET_ADDRESS
+
+# Pool password (often x)
 POOL_PASS=x
 
-# Number of CPU threads to use
-THREADS=4
+# Work mode controls
+USE_GPU=true
+USE_CPU=false
 
-# Extra command-line args passed directly to cpuminer (optional)
+# CPU threads used when USE_CPU=true
+THREADS=2
+
+# GPU intensity (miner-dependent; values often d/8-20)
+GPU_INTENSITY=d
+
+# eco | balanced | performance
+POWER_PROFILE=balanced
+
+# Extra miner-specific arguments (space separated)
 EXTRA_ARGS=""
